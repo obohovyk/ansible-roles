@@ -1,0 +1,22 @@
+---
+
+zabbix_version: "2.4"
+zabbix_enabled: False
+
+zabbix_logfilesize: 512
+zabbix_agent_ip:
+  - "127.0.0.1"
+
+zabbix_agent_port: "10050"
+zabbix_server: "138.201.175.207"
+
+zabbix_scripts_dir: "/etc/zabbix/scripts"
+
+zabbix_checks:
+  mdadm: False
+  mongodb: False
+  mysql: False
+  redis: False
+  ssl: False
+  nginx: False
+  postgres: False

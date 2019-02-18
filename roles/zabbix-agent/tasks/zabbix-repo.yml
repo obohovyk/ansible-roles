@@ -1,0 +1,29 @@
+---
+
+- name: add zabbix repo via yum (rhel 6)
+  yum: name=http://repo.zabbix.com/zabbix/{{ zabbix_version }}/rhel/6/x86_64/zabbix-release-{{ zabbix_version }}-1.el6.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "6"
+  tags:
+    - zabbix
+    - zabbix-repo
+
+- name: add zabbix repo via yum (rhel 7)
+  yum: name=http://repo.zabbix.com/zabbix/{{ zabbix_version }}/rhel/7/x86_64/zabbix-release-{{ zabbix_version }}-1.el7.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "7"
+  tags:
+    - zabbix
+    - zabbix-repo
+
+- name: download .deb zabbix
+  get_url: url=http://repo.zabbix.com/zabbix/{{ zabbix_version }}/ubuntu/pool/main/z/zabbix-release/zabbix-release_2.4-1+trusty_all.deb dest=/tmp/zabbix-release_{{ zabbix_version }}-1+trusty_all.deb
+  when: ansible_os_family == "Debian"
+  tags:
+    - zabbix
+    - zabbix-repo
+
+- name: install .deb zabbix
+  apt: deb=/tmp/zabbix-release_{{ zabbix_version }}-1+trusty_all.deb
+  when: ansible_os_family == "Debian"
+  tags:
+    - zabbix
+    - zabbix-repo

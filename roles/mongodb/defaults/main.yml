@@ -1,0 +1,8 @@
+---
+
+mongodb_version: "3.2"
+# possible 3.0 (ubuntu 14.04) | 3.2 (ubuntu 14.04/16.04)
+
+mongodb_port: 27017
+mongodb_bind_address:
+  - 127.0.0.1

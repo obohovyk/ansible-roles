@@ -1,0 +1,46 @@
+---
+
+- name: include os-pecific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: redis
+
+- name: install redis packages via yum
+  yum: name={{ item }} state=present enablerepo=epel
+  with_items: "{{ redis_packages }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - redis
+    - redis-rhel
+
+- name: install redis packages via apt
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items: "{{ redis_packages }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - redis
+    - redis-debian
+
+- name: copy redis configuration file
+  template: src=redis.conf.j2 dest={{ redis_conf_dest }}
+  notify:
+   - restart redis
+  tags: redis
+
+- name: copy rsyslogd configuration file for redis filter
+  template: src=rsyslogd.conf.j2 dest=/etc/rsyslog.d/redis.conf
+  when: redis_syslog_enabled == "yes"
+  notify:
+  - restart rsyslog
+  tags:
+    - redis
+    - redis-rsyslog
+
+- name: set kernel paramter for vm overcommit
+  sysctl: name=vm.overcommit_memory value={{ redis_overcommit_memory }} state=present
+  tags:
+    - redis
+    - redis-overcommit
+
+- name: enable redis service
+  service: name={{ redis_service }} state=started enabled=yes
+  tags: redis

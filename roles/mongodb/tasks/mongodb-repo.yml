@@ -1,0 +1,57 @@
+---
+
+- name: add package signing key for mongodb (3.0) via apt
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x7F0CEB10 state=present
+  when: ansible_os_family == "Debian" and ansible_distribution_version == "14.04" and mongodb_version == "3.0"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add package signing key for mongodb (3.2) via apt
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xEA312927 state=present
+  when: ansible_os_family == "Debian" and ansible_distribution_version == "14.04" and mongodb_version == "3.2"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add package signing key for mongodb (3.2) via apt
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xEA312927 state=present
+  when: ansible_os_family == "Debian" and ansible_distribution_version == "16.04" and mongodb_version == "3.2"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add mongodb (3.0) repository via apt
+  apt_repository: repo="deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" state=present update_cache=yes
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04" and mongodb_version == "3.0"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add mongodb (3.2) repository via apt (ubuntu 14.04)
+  apt_repository: repo="deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" state=present update_cache=yes
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04" and mongodb_version == "3.2"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add mongodb (3.2) repository via apt (ubuntu 16.04)
+  apt_repository: repo="deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" state=present update_cache=yes
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04" and mongodb_version == "3.2"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add mongodb (3.0) repository via yum
+  template: src=mongodb-org-3.0.j2 dest=/etc/yum.repos.d/mongodb-org-3.0.repo owner=root group=root mode=0644
+  when: ansible_os_family == "RedHat" and mongodb_version == "3.0"
+  tags:
+    - mongodb
+    - mongodb-repo
+
+- name: add mongodb (3.2) repository via yum
+  template: src=mongodb-org-3.2.j2 dest=/etc/yum.repos.d/mongodb-org-3.2.repo owner=root group=root mode=0644
+  when: ansible_os_family == "RedHat" and mongodb_version == "3.2"
+  tags:
+    - mongodb
+    - mongodb-repo

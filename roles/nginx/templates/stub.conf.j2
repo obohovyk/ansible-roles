@@ -1,0 +1,11 @@
+server {
+    charset {{ nginx_http_params.charset }};
+    listen localhost:10061;
+
+    location /status {
+        stub_status on;
+        access_log off;
+
+        allow all;
+    }
+}

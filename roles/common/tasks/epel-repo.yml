@@ -1,0 +1,17 @@
+---
+
+- name: install the epel repo (rhel 6)
+  yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "6"
+        and ansible_distribution != "Fedora"
+  tags:
+    - common
+    - epel-repo
+
+- name: install the epel repo (rhel 7)
+  yum: name=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "7"
+        and ansible_distribution != "Fedora"
+  tags:
+    - common
+    - epel-repo

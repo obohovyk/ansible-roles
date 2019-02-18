@@ -1,0 +1,15 @@
+---
+
+- name: install mysql repo via yum (rhel 6)
+  yum: name=https://dev.mysql.com/get/mysql57-community-release-el6-8.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "6"
+  tags:
+    - mysql
+    - mysql-repo
+
+- name: install mysql repo via yum (rhel 7)
+  yum: name=https://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "7"
+  tags:
+    - mysql
+    - mysql-repo

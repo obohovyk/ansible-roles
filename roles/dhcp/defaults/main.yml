@@ -1,0 +1,18 @@
+---
+
+dhcp_domain_name: "example.com"
+dhcp_domain_name_servers:
+  - "192.168.2.1"
+
+dhcp_def_lease_time: 32400
+dhcp_max_lease_time: 43200
+
+dhcp_subnet: "192.168.2.0"
+dhcp_subnet_mask: "255.255.255.0"
+dhcp_range_start: "192.168.2.50"
+dhcp_range_end: "192.168.2.200"
+dhcp_routers: "192.168.2.1"
+dhcp_broadcast: "192.168.2.255"
+
+dhcp_include_file_exist: True
+dhcp_include_file: "/etc/dhcp/dhcpd.conf.hosts"

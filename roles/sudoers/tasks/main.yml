@@ -1,0 +1,15 @@
+---
+
+- name: include os-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: sudoers
+
+- name: create sudoers file
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0440
+    validate: '/usr/sbin/visudo -cf %s'
+  tags: sudoers

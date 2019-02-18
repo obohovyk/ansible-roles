@@ -1,0 +1,5 @@
+---
+
+- name: restart mysql
+  service: name={{ mysql_service }} state=restarted
+  changed_when: config_template.changed

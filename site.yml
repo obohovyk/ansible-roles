@@ -1,0 +1,35 @@
+---
+
+### Host: ec2-11-22-33-44.us-west-2.compute.amazonaws.com
+- hosts: example1.com
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  roles:
+    - role: common
+    - role: mongodb
+    - role: zabbix-agent
+      zabbix_agent_ip:
+        - "172.31.31.120"
+      zabbix_checks.mongodb: True
+
+### Host: 11.22.33.44
+- hosts: example2.com
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  roles:
+    - role: common
+    - role: iptables
+    - role: nodejs
+    - role: redis
+    - role: zabbix-agent
+      zabbix_agent_ip:
+        - "172.31.6.47"
+      zabbix_checks.mysql: True
+      mysql_client_user: "debian-sys-maint"
+      mysql_client_password: "ms73enaa$&!ee0"
+      zabbix_checks.redis: True
+    - role: sysctl

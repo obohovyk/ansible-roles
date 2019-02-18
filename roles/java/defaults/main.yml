@@ -1,0 +1,7 @@
+---
+java_packages: 
+    - oracle-java8-installer
+    - oracle-java8-set-default
+java_packages_red:
+    - java-1.8.0-openjdk
+java_cleanup: True

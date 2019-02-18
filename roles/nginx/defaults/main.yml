@@ -1,0 +1,37 @@
+---
+
+worker_connections: 1024
+
+nginx_http_params:
+  charset: "utf-8"
+  server_tokens: "off"
+  sendfile: "on"
+  tcp_nopush: "on"
+  tcp_nodelay: "on"
+  keepalive_timeout: 60
+  client_max_body_size: "32m"
+
+nginx_log_dir: "/var/log/nginx"
+nginx_error_log_name: "access.log"
+nginx_access_log_name: "error.log"
+nginx_default_port: 80
+
+nginx_separate_logs_per_site: true
+
+nginx_fastcgi_enable: true
+nginx_ssl_enable: false
+
+nginx_proxy_pass_enable: false
+nginx_proxy_pass_params:
+  proxy_pass_location: "/"
+  proxy_pass_ip: "127.0.0.1"
+  proxy_pass_port: 1234
+  proxy_pass_scheme: "http"
+
+nginx_sites:
+ - server:
+    listen: 80
+    name: "example.com"
+    server_name: "example.com www.example.com"
+    root: "/usr/share/nginx/html/example.com"
+    location: { name: "/", index: "index.php index.html index.htm", try_files: "$uri $uri/ /index.php" }

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+PidFile={{ zabbix_pidfile }}
+LogFile={{ zabbix_logfile }}
+LogFileSize={{ zabbix_logfilesize }}
+
+Server={{ zabbix_server }}
+ListenIP={{ zabbix_agent_ip|join(',') }}
+ListenPort={{ zabbix_agent_port }}
+
+Include={{ zabbix_include_dir }}

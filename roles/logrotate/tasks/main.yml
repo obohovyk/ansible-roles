@@ -1,0 +1,17 @@
+---
+
+- name: install logrotate via yum
+  yum: name=logrotate state=installed
+  when: ansible_os_family == "RedHat"
+
+- name: install logrotate via apt
+  apt: name=logrotate state=installed
+  when: ansible_os_family == "Debian"
+
+- name: copy job template
+  template:
+    src: default.j2
+    dest: "{{ logrotate_dir }}/{{ project_name_file }}"
+    owner: root
+    group: root
+    mode: 0644

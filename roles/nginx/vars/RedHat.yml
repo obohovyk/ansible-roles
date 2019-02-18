@@ -1,0 +1,6 @@
+---
+
+nginx_pidfile: "/var/run/nginx.pid"
+
+nginx_packages:
+    - nginx

@@ -1,0 +1,8 @@
+---
+
+user:
+  name: deploy
+  group: deploy
+  comment: "Administrative User"
+  shell: "/bin/bash"
+  password: deploy

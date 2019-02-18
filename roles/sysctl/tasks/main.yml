@@ -1,0 +1,13 @@
+---
+
+- name: create sysctl configuration
+  template:
+    src: sysctl.conf.j2
+    dest: "{{ sysctl_config_location }}"
+    owner: root
+    group: root
+    mode: 0644
+
+  notify:
+    - reload sysctl
+  tags: sysctl

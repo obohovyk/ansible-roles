@@ -1,0 +1,32 @@
+---
+
+- name: include os-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - ntp
+
+- name: install ntp via yum
+  yum: name="{{ item }}" state=installed enablerepo=epel
+  with_items:
+    - ntp
+    - ntpdate
+  when: ansible_os_family == "RedHat"
+  tags: ntp
+
+- name: install ntp via apt
+  apt: name="{{ item }}" state=installed update_cache=true cache_valid_time=3600
+  with_items:
+    - ntp
+    - ntpdate
+  when: ansible_os_family == "Debian"
+  tags: ntp
+
+- name: create ntp config file
+  template: src=ntp.j2 dest=/etc/ntp.conf owner=root group=root mode=0644 
+  notify:
+    - restart ntp
+  tags: ntp
+
+- name: enable ntp service
+  service: name={{ ntp_service }} state=started enabled=yes
+  tags: ntp

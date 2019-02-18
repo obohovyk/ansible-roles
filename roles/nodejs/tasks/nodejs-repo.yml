@@ -1,0 +1,29 @@
+---
+
+- name: add nodejs repo via yum (rhel 6)
+  yum: name="https://rpm.nodesource.com/pub_{{ nodejs_version }}/el/6/x86_64/nodesource-release-el6-1.noarch.rpm" state=installed
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "6"
+  tags:
+    - nodejs
+    - nodejs-repo
+
+- name: add nodejs repo via yum (rhel 7)
+  yum: name="https://rpm.nodesource.com/pub_{{ nodejs_version }}/el/7/x86_64/nodesource-release-el7-1.noarch.rpm" state=installed
+  when: ansible_os_family == "RedHat" and ansible_distribution_version == "7"
+  tags:
+    - nodejs
+    - nodejs-repo
+
+- name: add nodejs gpg key
+  apt_key: url=https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280 id=68576280 state=present validate_certs=no
+  when: ansible_os_family == "Debian" and ansible_distribution == "Ubuntu"
+  tags:
+    - nodejs
+    - nodejs-repo
+
+- name: add nodejs repo via apt
+  template: src=nodesource.list.j2 dest=/etc/apt/sources.list.d/nodesource.list owner=root group=root mode=0644
+  when: ansible_os_family == "Debian" and ansible_distribution == "Ubuntu"
+  tags:
+    - nodejs
+    - nodejs-repo

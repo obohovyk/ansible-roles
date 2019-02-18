@@ -1,0 +1,40 @@
+---
+
+iptables_input_policy: "ACCEPT"
+iptables_forward_policy: "ACCEPT"
+iptables_output_policy: "ACCEPT"
+
+iptables6_input_policy: "ACCEPT"
+iptables6_forward_policy: "ACCEPT"
+iptables6_output_policy: "ACCEPT"
+
+iptables_icmp_enabled: true
+iptables_gre_enabled: false
+
+iptables_rules:
+  - chain: input
+    interface: eth0
+    protocol: tcp
+    port: 22
+    source_addresses: 0.0.0.0/0
+    destination_address: 0.0.0.0/0
+    comment: "SSH connection"
+
+  - chain: input
+    interface: eth0
+    protocol: tcp
+    port: 10050
+    source_addresses: 0.0.0.0/0
+    destination_address: 0.0.0.0/0
+    comment: "Zabbix agent"
+
+iptables_port_forward_rules: []
+
+iptables6_filter_input_policy: drop
+iptables6_filter_forward_policy: drop
+iptables6_filter_output_policy: accept
+
+iptables6_nat_prerouting_policy: accept
+iptables6_nat_input_policy: accept
+iptables6_nat_output_policy: accept
+iptables6_nat_postrouting_policy: accept

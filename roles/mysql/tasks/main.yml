@@ -1,0 +1,47 @@
+---
+
+- include: mysql-repo.yml
+
+- name: include os-pecific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: mysql
+
+- name: install mysql server via yum
+  yum: name={{ item }} state=installed enablerepo=mysql56-community disablerepo=mysql57-community disable_gpg_check=no
+  with_items: "{{ mysql_packages }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - mysql
+    - mysql-server
+
+- name: install mysql server via apt
+  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items: "{{ mysql_packages }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - mysql
+    - mysql-server
+
+- name: create my.cnf config file
+  template: src=my.cnf.j2 dest={{ mysql_conf_file }} owner=root group=root mode=0644
+  register: config_template
+
+  notify:
+    - restart mysql
+  tags:
+    - mysql
+    - mysql-server
+
+- name: ensure directory /etc/mysql/conf.d exists (debian only)
+  file: path=/etc/mysql/conf.d state=directory
+  when: ansible_os_family == "Debian"
+
+  tags:
+    - mysql
+    - mysql-confdir
+
+- name: enable mysql service
+  service: name={{ mysql_service_name }} state=started enabled=yes
+  tags:
+    - mysql
+    - mysql-server

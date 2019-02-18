@@ -1,0 +1,15 @@
+---
+
+- name: add nginx repo via yum
+  template: src=nginx.repo.j2 dest=/etc/yum.repos.d/nginx.repo owner=root group=root mode=0644
+  when: ansible_os_family == "RedHat"
+  tags:
+    - nginx
+    - nginx-repo
+
+- name: add nginx ppa via apt
+  apt_repository: repo='ppa:nginx/stable' state=present update_cache=yes
+  when: ansible_os_family == "Debian"
+  tags:
+    - nginx
+    - nginx-repo

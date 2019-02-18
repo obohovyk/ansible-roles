@@ -1,0 +1,32 @@
+---
+
+- include: nodejs-repo.yml
+
+- name: install nodejs/npm via yum
+  yum: name="{{ item }}" state=installed
+  with_items:
+    - nodejs
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - nodejs
+    - npm
+
+- name: install nodejs/npm via apt
+  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items:
+    - apt-transport-https
+    - nodejs
+  when: ansible_os_family == 'Debian'
+  tags:
+    - nodejs
+    - npm
+
+- name: install pm2 global
+  npm: name={{ item }} global=yes state=present
+  with_items:
+    - pm2
+    - bower
+  tags:
+    - npm
+    - pm2
+    - bower

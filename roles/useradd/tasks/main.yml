@@ -1,0 +1,24 @@
+---
+
+- name: create group
+  group: name={{ user.group }} state=present
+  tags: useradd
+
+- name: create user
+  user: name={{ user.name }} group={{ user.group }} password="{{ user.password|password_hash('sha512') }}" comment="{{ user.comment }}" shell="{{ user.shell }}" generate_ssh_key=yes createhome=yes
+  tags: useradd
+
+- name: add user to administrative groups
+  command: /usr/sbin/usermod -a -G {{ item }} {{ user.name }}
+  with_items:
+    - "wheel"
+  when: ansible_os_family == 'RedHat'
+  tags: useradd
+
+- name: add user to administrative groups
+  command: /usr/sbin/usermod -a -G {{ item }} {{ user.name }}
+  with_items:
+    - "sudo"
+    - "adm"
+  when: ansible_os_family == 'Debian'
+  tags: useradd

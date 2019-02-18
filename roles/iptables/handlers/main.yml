@@ -1,0 +1,5 @@
+---
+
+- name: restart iptables
+  service: name="{{ iptables_service_name }}" state=restarted
+  changed_when: config_template.changed

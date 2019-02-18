@@ -1,0 +1,21 @@
+---
+
+common_packages:
+    - mc
+    - git
+    - atop
+    - htop
+    - nano
+    - sudo
+    - wget
+    - curl
+    - nmap
+    - pwgen
+    - unzip
+    - traceroute
+    - telnet
+    - lsof
+    - httpd-tools
+    - bind-utils
+    - libselinux-python
+    - policycoreutils-python

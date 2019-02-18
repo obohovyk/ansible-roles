@@ -1,0 +1,21 @@
+---
+
+common_packages:
+    - mc
+    - git
+    - atop
+    - htop
+    - nano
+    - sudo
+    - wget
+    - curl
+    - nmap
+    - pwgen
+    - unzip
+    - traceroute
+    - telnet
+    - lsof
+    - apache2-utils
+    - dnsutils
+    - build-essential
+    - software-properties-common

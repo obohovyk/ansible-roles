@@ -1,0 +1,23 @@
+---
+
+- include_vars: Ubuntu.yml
+
+- name: Install python-apt
+  apt: pkg=python-apt
+
+- include: "webupd8_for_{{ansible_distribution}}.yml"
+
+- name: Automatically select the Oracle License
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+
+- name: Install JRE
+  apt: pkg=oracle-java8-installer state=latest update-cache=yes force=yes
+
+- name: Install Java packages
+  apt: pkg={{ item }} state=latest update-cache=yes force=yes
+  with_items: {{ java_packages  }}
+
+- name: Remove unwanted Java packages
+  apt: pkg={{ item }} state=absent
+  with_items: "{{ java_packages_to_remove }}"
+  when: java_cleanup

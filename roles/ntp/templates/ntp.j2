@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+
+driftfile {{ driftfile }}
+restrict default nomodify notrap nopeer noquery
+restrict -6 default kod nomodify notrap nopeer noquery
+
+restrict 127.0.0.1
+restrict -6 ::1
+{% if resrtict_network %}
+restrict {{ local.network }} mask {{ local.netmask }} nomodify notrap
+{% endif %}
+
+{% for s in ntp %}
+server {{ s }} iburst
+{% endfor %}
+
+includefile /etc/ntp/crypto/pw
+keys {{ keys }}
+
+#crypto
+#trustedkey 4 8 42
+#requestkey 8
+#controlkey 8
+#statistics clockstats cryptostats loopstats peerstats
+
+disable monitor

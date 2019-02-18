@@ -1,0 +1,56 @@
+---
+
+- name: include os-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family }}.yml"
+    - "{{ ansible_distribution_release }}.yml"
+  tags: iptables
+
+- name: install iptables via yum
+  yum: name={{ item }} state=installed enablerepo=epel
+  with_items: "{{ iptables_packages }}"
+  when: ansible_os_family == "RedHat"
+  tags: iptables
+
+- name: install iptables via apt
+  apt: name={{ item }} state=installed update_cache=true cache_valid_time=3600
+  with_items: "{{ iptables_packages }}"
+  when: ansible_os_family == "Debian"
+  tags: iptables
+
+- name: create iptables configuration
+  become: yes
+  template:
+    src: iptables.j2
+    dest: "{{ iptables_configuration }}"
+    owner: root
+    group: root
+    mode: 0600
+  register: config_template
+
+  notify:
+    - restart iptables
+  tags: iptables
+
+- name: create iptables6 configuration
+  become: yes
+  template:
+    src: iptables6.j2
+    dest: "{{ iptables6_configuration }}"
+    owner: root
+    group: root
+    mode: 0600
+  register: config_template
+
+  notify:
+    - restart iptables
+  tags: iptables
+
+- name: enable iptables service
+  become: yes
+  service: name="{{ iptables_service_name }}" state=started enabled=yes
+  changed_when: False
+  tags:
+    - iptables
+    - iptables-service

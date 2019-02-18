@@ -1,0 +1,123 @@
+---
+
+- name: create zabbix scripts directory
+  file: path="{{ zabbix_scripts_dir }}" state=directory owner=root group=root mode=0755
+  tags:
+    - zabbix
+    - zabbix-checks
+
+- name: enable zabbix mdadm check
+  copy:
+    src: "{{ role_path }}/files/mdadm/userparameter_mdadm.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_mdadm.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.mdadm
+  tags:
+    - zabbix
+    - zabbix-mdadm
+
+- name: enable zabbix mongodb check (step 1)
+  copy:
+    src: "{{ role_path }}/files/mongodb/userparameter_mongodb.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_mongodb.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.mongodb
+  tags:
+    - zabbix
+    - zabbix-mongodb
+- name: enable zabbix mongodb check (step 2)
+  copy:
+    src: "{{ role_path }}/files/mongodb/mongodb_status.sh"
+    dest: "{{ zabbix_scripts_dir }}/mongodb_status.sh"
+    owner: root
+    group: root
+    mode: 0775
+  when: zabbix_checks.mongodb
+  tags:
+    - zabbix
+    - zabbix-mongodb
+
+- name: enable zabbix mysql check (step 1)
+  copy:
+    src: "{{ role_path }}/files/mysql/userparameter_mysql.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_mysql.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.mysql
+  tags:
+    - zabbix
+    - zabbix-mysql
+- name: enable zabbix mysql check (step 2)
+  template:
+    src: ".my.cnf.j2"
+    dest: "/etc/zabbix/.my.cnf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.mysql
+  tags:
+    - zabbix
+    - zabbix-mysql
+
+- name: enable zabbix nginx check (step 1)
+  copy:
+    src: "{{ role_path }}/files/nginx/userparameter_nginx.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_nginx.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.nginx
+  tags:
+    - zabbix
+    - zabbix-nginx
+- name: enable zabbix nginx check (step 2)
+  copy:
+    src: "{{ role_path }}/files/nginx/nginx_status.sh"
+    dest: "{{ zabbix_scripts_dir }}/nginx_status.sh"
+    owner: root
+    group: root
+    mode: 0775
+  when: zabbix_checks.nginx
+  tags:
+    - zabbix
+    - zabbix-nginx
+
+- name: enable zabbix redis check
+  copy:
+    src: "{{ role_path }}/files/redis/userparameter_redis.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_redis.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.redis
+  tags:
+    - zabbix
+    - zabbix-redis
+
+- name: enable zabbix ssl check (step 1)
+  copy:
+    src: "{{ role_path }}/files/ssl/userparameter_ssl.conf"
+    dest: "{{ zabbix_include_dir }}/userparameter_ssl.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: zabbix_checks.ssl
+  tags:
+    - zabbix
+    - zabbix-ssl
+- name: enable zabbix ssl check (step 2)
+  copy:
+    src: "{{ role_path }}/files/ssl/ssl_status.sh"
+    dest: "{{ zabbix_scripts_dir }}/ssl_status.sh"
+    owner: root
+    group: root
+    mode: 0775
+  when: zabbix_checks.ssl
+  tags:
+    - zabbix
+    - zabbix-ssl

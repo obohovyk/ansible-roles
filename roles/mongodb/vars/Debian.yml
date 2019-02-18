@@ -1,0 +1,9 @@
+---
+
+mongodb_packages:
+    - mongodb-org
+    - mongodb-org-server
+    - mongodb-org-tools
+
+mongodb_path: "/var/lib/mongodb"
+mongodb_pidfile: "/run/mongodb.pid"

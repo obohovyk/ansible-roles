@@ -1,0 +1,23 @@
+---
+
+mysql_packages:
+    - mysql
+    - mysql-community-server
+
+mysql_socket: "/var/lib/mysql/mysql.sock"
+mysql_pid_file: "/var/run/mysqld/mysqld.pid"
+mysql_datadir: "/var/lib/mysql"
+
+mysql_general_log_enabled: false
+mysql_general_log_file: "/var/log/mysqld.log"
+
+mysql_error_log_enabled: true
+mysql_error_log_file: "/var/log/mysqld_error.log"
+
+mysql_slow_query_log_enabled: false
+mysql_slow_query_log_file: "/var/log/mysqld_slow.log"
+mysql_long_query_time: 10
+
+mysql_conf_dir: "/etc"
+mysql_conf_file: "/etc/my.cnf"
+mysql_service: mysqld

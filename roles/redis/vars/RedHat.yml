@@ -1,0 +1,10 @@
+---
+
+redis_service: "redis"
+redis_conf_dest: "/etc/redis.conf"
+redis_logfile: "/var/log/redis.log"
+redis_pidfile: "/var/run/redis/redis.pid"
+
+redis_packages:
+  - libselinux-python
+  - redis

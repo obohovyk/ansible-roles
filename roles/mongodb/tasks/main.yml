@@ -1,0 +1,36 @@
+---
+
+- include: mongodb-repo.yml
+
+- name: include os-pecific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: mongodb
+
+- name: install mongodb via apt
+  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items: "{{ mongodb_packages }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - mongodb
+    - mongodb-org
+
+- name: install mongodb via yum
+  yum: name={{ item }} state=installed
+  with_items: "{{ mongodb_packages }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    mongodb
+    mongodb-org
+
+- name: copy mongodb configuration file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+
+  notify:
+    - restart mongodb
+  tags: mongodb
+
+- name: enable mongodb service
+  service: name=mongod state=started enabled=yes
+  tags:
+    - mongodb
+    - mongodb-service

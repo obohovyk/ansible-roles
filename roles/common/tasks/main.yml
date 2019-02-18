@@ -1,0 +1,24 @@
+---
+
+- include: epel-repo.yml
+
+- name: include os-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - common
+
+- name: install common packages via yum
+  yum: name={{ item }} state=installed enablerepo=epel
+  with_items: "{{ common_packages }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - common
+    - common-rhel
+
+- name: install common apps via apt
+  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items: "{{ common_packages }}"
+  when: ansible_os_family == "Debian"
+  tags:
+    - common
+    - common-debian
