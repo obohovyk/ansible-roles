@@ -6,18 +6,18 @@
   include_vars: "{{ ansible_os_family }}.yml"
   tags:
     - common
+    - common-rhel
+    - common-debian
 
 - name: install common packages via yum
-  yum: name={{ item }} state=installed enablerepo=epel
-  with_items: "{{ common_packages }}"
+  yum: name="{{ common_packages }}" state=present enablerepo=epel
   when: ansible_os_family == "RedHat"
   tags:
     - common
     - common-rhel
 
 - name: install common apps via apt
-  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
-  with_items: "{{ common_packages }}"
+  apt: name="{{ common_packages }}" state=present update_cache=yes cache_valid_time=3600
   when: ansible_os_family == "Debian"
   tags:
     - common
