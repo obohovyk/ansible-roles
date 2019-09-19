@@ -1,0 +1,14 @@
+---
+
+php_fpm_packages:
+    - php-fpm
+    - php-cli
+    - php-common
+
+php_fpm_user: nginx
+php_fpm_group: nginx
+php_fpm_pool_dir: /etc/php-fpm/pool.d
+
+php_fpm_service_name: php-fpm
+
+php_fpm_listen: /var/run/php-fpm.sock

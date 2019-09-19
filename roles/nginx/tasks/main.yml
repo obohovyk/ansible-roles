@@ -7,16 +7,14 @@
   tags: nginx
 
 - name: install nginx package via yum
-  yum: name={{ item }} state=installed enablerepo=epel
-  with_items: "{{ nginx_packages }}"
+  yum: name=nginx state=present enablerepo=epel
   when: ansible_os_family == "RedHat"
   tags:
     - nginx
     - nginx-rhel
 
 - name: install nginx package via apt
-  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
-  with_items: "{{ nginx_packages }}"
+  apt: name=nginx state=present update_cache=yes cache_valid_time=3600
   when: ansible_os_family == "Debian"
   tags:
     - nginx
@@ -25,65 +23,20 @@
 - name: copy nginx configuration file
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
 
-  notify:
-   - restart nginx
-  tags: nginx
+- include_tasks: nginx-default.yaml
+  when: nginx_default_file = True
 
-- name: copy nginx default configuration file (rhel)
-  template: src=default.conf.j2 dest=/etc/nginx/conf.d/default.conf
-  when: ansible_os_family == "RedHat"
-  tags: 
-    - nginx
-    - nginx-rhel
+- include_tasks: nginx-vhosts.yaml
 
-- name: create vhost for site specific configurations
-  template: src=vhost.conf.j2 dest=/etc/nginx/conf.d/{{ item.server.name }}.conf
-  with_items: nginx_sites
-  when: ansible_os_family == "RedHat" and nginx_sites|lower != 'none'
+- include_tasks: nginx-stub.yaml
+  when: nginx_stub_file = True
 
   notify:
    - restart nginx
-  tags:
-    - nginx
-    - nginx-restart
-
-- name: create directories for Debian specific configurations
-  file: path=/etc/nginx/{{ item }} state=directory owner=root group=root mode=0755
-  with_items:
-    - "sites-available"
-    - "sites-enabled"
-  when: ansible_os_family == "Debian"
-  tags: nginx
-
-- name: copy nginx default configuration file (debian)
-  template: src=default.conf.j2 dest=/etc/nginx/sites-available/default
-  when: ansible_os_family == "Debian"
-  tags: nginx
-
-- name: create default link for site enabled specific configurations (debian)
-  file: path=/etc/nginx/sites-enabled/default state=link src=/etc/nginx/sites-available/default
-  when: ansible_os_family == "Debian"
-  tags: nginx
-
-- name: create vhost for site specific configurations (debian)
-  template: src=vhost.conf.j2 dest=/etc/nginx/sites-available/{{ item.server.name }}
-  with_items: nginx_sites
-  when: ansible_os_family == "Debian" and nginx_sites|lower != 'none'
-  tags: nginx
-
-- name: create vhost link for site enabled specific configurations (debian)
-  file: path=/etc/nginx/sites-enabled/{{ item.server.name }} state=link src=/etc/nginx/sites-available/{{ item.server.name }}
-  with_items: nginx_sites
-  when: ansible_os_family == "Debian" and nginx_sites|lower != 'none'
-
-  notify:
-   - restart nginx
-  tags: nginx
-
-- name: copy nginx stub configuration file
-  template: src=stub.conf.j2 dest=/etc/nginx/conf.d/stub.conf
   tags: nginx
 
 - name: enable nginx service
-  service: name=nginx state=stopped enabled=yes
-  tags: nginx
+  service: name=nginx state=started enabled=yes
+  tags: 
+    - nginx
+    - nginx-service

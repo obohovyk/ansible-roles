@@ -1,6 +1,4 @@
 ---
 
 nginx_pidfile: "/var/run/nginx.pid"
-
-nginx_packages:
-    - nginx
+nginx_fpm_unix_socket: "unix:/var/run/php-fpm.sock"

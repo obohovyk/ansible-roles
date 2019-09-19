@@ -1,0 +1,27 @@
+---
+
+- name: add managed vhost config file
+  template:
+    src: vhost.conf.j2
+    dest: "/etc/nginx/sites-enabled/{{ item.filename|default(item.server_name.split(' ')[0] ~ '.conf') }}"
+    force: true
+    owner: root
+    group: root
+    mode: 0644
+  when: item.state|default('present') != 'absent'
+  with_items: "{{ nginx_vhosts }}"
+
+- name: create vhost directories
+  file:
+    dest: "/var/www/{{ item.server_name }}"
+    state: directory
+    owner: root
+    group: www-data
+    mode: 0775
+  when: item.state|default('present') != 'absent'
+  with_items: "{{ nginx_vhosts }}"
+
+- name: create index file
+  template: src=index.php.j2 dest="/var/www/{{ item.server_name }}/{{ item.index }}" owner=root group=www-data mode=0775
+  when: item.state|default('present') != 'absent'
+  with_items: "{{ nginx_vhosts }}"

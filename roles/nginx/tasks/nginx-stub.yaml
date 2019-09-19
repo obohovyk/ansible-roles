@@ -1,0 +1,15 @@
+---
+
+- name: copy nginx stub configuration file (RedHat)
+  template: src=stub.conf.j2 dest=/etc/nginx/conf.d/stub.conf
+  when: nginx_stub_file == True and ansible_os_family == "RedHat"
+  tags:
+    - nginx
+    - nginx-stub
+
+- name: copy nginx stub configuration file (Debian)
+  template: src=stub.conf.j2 dest=/etc/nginx/sites-enabled/stub.conf
+  when: nginx_stub_file == True and ansible_os_family == "Debian"
+  tags:
+    - nginx
+    - nginx-stub

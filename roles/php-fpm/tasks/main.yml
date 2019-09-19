@@ -1,6 +1,43 @@
 ---
 
-- include: install.yml
-- include: configure.yml
-- include: pools.yml
-  where: php_fpm_pools != false
+- name: include os-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: php-fpm
+
+- name: install php-fpm packages via apt (Debian)
+  apt: name="{{ php_fpm_packages }}" state=present update_cache=yes cache_valid_time=3600
+  when: ansible_os_family == "Debian"
+  tags: 
+    - php-fpm
+    - php-fpm_install
+
+- name: install php-fpm packages via yum (RedHat)
+  yum: name="{{ php_fpm_packages }}" state=present enablerepo=epel
+  when: ansible_os_family == "RedHat"
+  tags:
+    - php-fpm
+    - php-fpm_install
+
+- name: copy pool template (Debian)
+  template: src=pool.conf.j2 dest={{php_fpm_pool_dir}}/www.conf
+  when: ansible_os_family == "Debian"
+  tags: 
+    - php-fpm
+    - php-fpm_configure
+
+- name: copy nginx stub configuration file (RedHat)
+  template: src=pool.conf.j2 dest={{php_fpm_pool_dir}}/www.conf
+  when: ansible_os_family == "RedHat"
+  tags: 
+    - php-fpm
+    - php-fpm_configure
+
+  notify:
+   - restart php-fpm
+  tags: php-fpm
+
+- name: enable php-fpm service
+  service: name={{ php_fpm_service_name }} state=started enabled=yes
+  tags: 
+    - php-fpm
+    - php-fpm-service

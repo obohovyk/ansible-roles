@@ -1,0 +1,14 @@
+---
+
+php_fpm_packages:
+    - php7.2-fpm
+    - php7.2-cli
+    - php7.2-common
+
+php_fpm_user: www-data
+php_fpm_group: www-data
+php_fpm_pool_dir: /etc/php/7.2/fpm/pool.d
+
+php_fpm_service_name: php7.2-fpm
+
+php_fpm_listen: /run/php/php7.2-fpm.sock
